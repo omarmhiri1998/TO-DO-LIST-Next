@@ -36,9 +36,9 @@ jobs:
       - name: Install Linux Lightning CSS binary
         working-directory: apps/web
         run: |
-          LIGHTNINGCSS_VERSION=$(node -p "require('lightningcss/package.json').version")
+          LIGHTNINGCSS_VERSION=$(node -e "const fs=require('fs'); const path=require('path'); const entry=require.resolve('lightningcss'); const file=path.join(path.dirname(entry),'..','package.json'); const pkg=JSON.parse(fs.readFileSync(file,'utf8')); process.stdout.write(pkg.version)")
           echo "Lightning CSS version: $LIGHTNINGCSS_VERSION"
-          npm install --no-save --package-lock=false "lightningcss-linux-x64-gnu@$LIGHTNINGCSS_VERSION"
+          npm install --no-save --package-lock=false --workspaces=false "lightningcss-linux-x64-gnu@$LIGHTNINGCSS_VERSION"
 
       - name: Run unit tests
         run: npm run test:unit
