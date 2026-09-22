@@ -25,7 +25,11 @@ describe(
   "MongoDB Integration Tests",
   () => {
     let client:
-      MongoClient;
+      MongoClient | null =
+        null;
+
+    let connected =
+      false;
 
     const databaseName =
       "todo_test_db";
@@ -47,13 +51,19 @@ describe(
           );
 
         await client.connect();
+
+        connected =
+          true;
       },
       30000
     );
 
     afterAll(
       async () => {
-        if (client) {
+        if (
+          client &&
+          connected
+        ) {
           const db =
             client.db(
               databaseName
@@ -73,30 +83,35 @@ describe(
     test(
       "should create a todo",
       async () => {
+        if (!client) {
+          throw new Error(
+            "MongoDB client is not connected"
+          );
+        }
+
         const db =
           client.db(
             databaseName
           );
 
-        const todos =
-          db.collection(
-            "todos"
-          );
-
         const result =
-          await todos.insertOne({
-            userId:
-              "test-user",
+          await db
+            .collection(
+              "todos"
+            )
+            .insertOne({
+              userId:
+                "test-user",
 
-            contain:
-              "Integration Test Todo",
+              contain:
+                "Integration Test Todo",
 
-            category:
-              "work",
+              category:
+                "work",
 
-            completed:
-              false
-          });
+              completed:
+                false
+            });
 
         expect(
           result.acknowledged
@@ -111,6 +126,12 @@ describe(
     test(
       "should read a todo",
       async () => {
+        if (!client) {
+          throw new Error(
+            "MongoDB client is not connected"
+          );
+        }
+
         const db =
           client.db(
             databaseName
@@ -141,6 +162,12 @@ describe(
     test(
       "should update a todo",
       async () => {
+        if (!client) {
+          throw new Error(
+            "MongoDB client is not connected"
+          );
+        }
+
         const db =
           client.db(
             databaseName
@@ -182,6 +209,12 @@ describe(
     test(
       "should delete a todo",
       async () => {
+        if (!client) {
+          throw new Error(
+            "MongoDB client is not connected"
+          );
+        }
+
         const db =
           client.db(
             databaseName
