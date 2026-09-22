@@ -1,0 +1,29 @@
+{
+  "name": "todo-list-next",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+  "dev": "npm run dev --workspace=apps/web",
+  "build": "npm run build --workspace=apps/web",
+  "start": "npm run start --workspace=apps/web",
+  "test:unit": "jest --config jest.unit.config.cjs",
+  "test:integration": "jest --config jest.integration.config.cjs --runInBand",
+  "test": "npm run test:unit && npm run test:integration",
+  "test:e2e": "playwright test",
+  "test:e2e:chromium": "playwright test --project=chromium",
+  "test:e2e:report": "playwright show-report"
+},
+  "devDependencies": {
+    "@jest/globals": "^30.5.2",
+    "@playwright/test": "^1.63.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.2",
+    "dotenv": "^18.0.3",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.12"
+  }
+}
